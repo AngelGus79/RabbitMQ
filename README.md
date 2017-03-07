@@ -14,3 +14,9 @@ criterio1.* solamente seran filtradas las cadenas que tengan criterio1, punto y 
 criterio1.# solamente seran filtradas las cadenas que tengan criterio1, punto y posteriormente cualquier numero de criterios separado por punto y estos pueden ser cualquier cadena.
 
 
+6.- En este caso se realiza un RPC(Remote procedure call) con RabbitMQ,
+a)El programa cliente crea una cola de devolucion exclusiva y anonima.
+b)El programa cliente manda un mensaje con 2 propiedades reply_to el cual configura la cola de regreso y el correlation_id el cual configura un valor unico para cada solicitud.
+c) la solicitud es enviada a una cola rpc_queue
+d) El rpc worker(aka:server) espera por una solicitud en esa cola. Cuando la colicitud aparece, este hace el trabajo y envia un mensaje con el resultado a el cliente, usando la cola establecida en el parametro reply_to (osea la cola de decolucion)
+e) el cliente espera por la informacion en la cola de devolucion. Cuando un mensaje aparece, este checa la propiedad correlation_id, si este coincide con el valor de correlation_id de la solicitud, regresa la respuesta a la aplicacion.
